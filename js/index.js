@@ -3,7 +3,16 @@ var colorPalette = document.querySelectorAll('.palette .color'),
       colorNames = document.querySelectorAll('.code .name'),
       colorCodes = document.querySelectorAll('.code .number'),
       imgPreview = document.getElementById('previewImg'),
-    addCopyAction= function(target){
+    autoGeneration = 0,
+    generateRandomPaletteFromImg = function() {
+        imgPreview.src = "https://picsum.photos/600/450";
+        getHexCodeFromImage(imgPreview);
+    },
+    generateRandomly = function (){
+        generateRandomPaletteFromImg();//initial generate after generate randomly button click
+        autoGeneration = setInterval(function() {generateRandomPaletteFromImg();}, 3000);
+    },
+    addCopyAction = function(target){
         var input = document.createElement('input'),
           hexCode = target.style.getPropertyValue('--color');
         
@@ -33,6 +42,8 @@ var colorPalette = document.querySelectorAll('.palette .color'),
         Array.from(colorPalette).forEach(palette => {
             palette.addEventListener('click', (e) => {
                 var target = e.target;
+
+                clearInterval(autoGeneration);
 
                 addCopyAction(target);
                 addCopiedText(target);
@@ -93,28 +104,13 @@ var colorPalette = document.querySelectorAll('.palette .color'),
         }
     },
     uploadImgUrl = function(e){
+        clearInterval(autoGeneration);
         imgPreview.classList.remove('blur');
         imgPreview.src = URL.createObjectURL(e.target.files[0]);
         
         getHexCodeFromImage(imgPreview);
-    },
-    generateColorPaletteRandomly = function (){
-        var scheme = new ColorScheme;
-
-        scheme.from_hue(Math.random() * 10000)         
-              .scheme('analogic')   
-              .variation('soft');
-        
-        imgPreview.classList.add('blur');
-
-        changePaletteColor(scheme.colors());      
     }
 ;
 
-
+generateRandomly();
 addCopiedEventListener();
-
-
-
-
-
