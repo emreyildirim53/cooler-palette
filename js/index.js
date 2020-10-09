@@ -9,6 +9,7 @@ var colorPalette = document.querySelectorAll('.palette .color'),
         getHexCodeFromImage(imgPreview);
     },
     generateRandomly = function (){
+        clearInterval(autoGeneration);
         generateRandomPaletteFromImg();//initial generate after generate randomly button click
         autoGeneration = setInterval(function() {generateRandomPaletteFromImg();}, 3000);
     },
@@ -104,6 +105,7 @@ var colorPalette = document.querySelectorAll('.palette .color'),
         }
     },
     uploadImgUrl = function(e){
+        e.preventDefault()
         clearInterval(autoGeneration);
         imgPreview.classList.remove('blur');
         imgPreview.src = URL.createObjectURL(e.target.files[0]);
@@ -112,5 +114,5 @@ var colorPalette = document.querySelectorAll('.palette .color'),
     }
 ;
 
-generateRandomly();
+generateRandomPaletteFromImg();
 addCopiedEventListener();
