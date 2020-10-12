@@ -256,7 +256,7 @@ input[type=file] {
 .hr {
     border-top: 1px solid #999;
     position: absolute;
-    
+    /*width: 160%;*/
     bottom: 80px;
     opacity: 0.2;
     left: -200px;
