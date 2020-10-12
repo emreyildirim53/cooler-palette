@@ -3,7 +3,83 @@ var colorPalette = document.querySelectorAll('.palette .color'),
       colorNames = document.querySelectorAll('.code .name'),
       colorCodes = document.querySelectorAll('.code .number'),
       imgPreview = document.getElementById('previewImg'),
+      preview   = document.getElementsByClassName('preview')[0],
     autoGeneration = 0,
+    isNumber = function (value) {
+        return typeof value === 'number' && isFinite(value);
+    },
+    isString = function (value) {
+        return typeof value === 'string' || value instanceof String;
+    },
+    componentToHex= function(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    },
+    rgbToHex =function (r, g, b) {
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    },
+    createLoadingIcon = function(){
+        var pie = document.createElement('div'),
+         oldPie = document.getElementsByClassName('pie-wrap')[0];
+         slice1 = document.createElement('div'),
+         slice2 = document.createElement('div');
+
+        oldPie ? oldPie.parentNode.removeChild(oldPie) : undefined;
+
+        slice1.className = 'slice1';
+        slice2.className = 'slice2';
+        slice1.classList.add('slice-wrap');
+        slice2.classList.add('slice-wrap');
+        pie.className = 'pie-wrap';
+
+        pie.appendChild(slice1);
+        pie.appendChild(slice2);
+
+        preview.insertBefore(pie, preview.firstChild);
+
+        return pie;
+    },
+    getHexCode = function (colorCode){
+        var firstCode = colorCode[0],
+              hexCode = '';
+
+        if(isNumber(firstCode)){
+            hexCode = rgbToHex(colorCode[0], colorCode[1], colorCode[2]);
+        }else if (isString(firstCode)){
+            hexCode = '#' + colorCode;
+        }
+
+        return hexCode.toUpperCase();
+    },
+    changePaletteColor = function (generatedPallets){     
+        for (var i = 0; i < colorPalette.length; ++i) {
+            var palette = colorPalette[i],
+                  color = generatedPallets[i],
+                hexCode = getHexCode(color),
+              ntcObject = ntc.name(hexCode),
+              colorName = ntcObject[1];
+             //exactMatch = ntcObject[2];
+            
+            palette.style.setProperty('--color', hexCode);
+            colorCodes[i].innerHTML = hexCode;
+            colorNames[i].innerHTML = colorName;
+        }
+    },
+    getHexCodeFromImage = function(img){
+        const colorThief = new ColorThief();
+        var generatedPallets = [];
+        if (img.complete) {
+            generatedPallets = colorThief.getPalette(img, 4, 1);
+            changePaletteColor(generatedPallets);
+        } else {
+          img.addEventListener('load', function() {
+            generatedPallets = colorThief.getPalette(img, 4, 1);
+            changePaletteColor(generatedPallets);
+
+            createLoadingIcon();
+          });
+        }
+    },
     generateRandomPaletteFromImg = function() {
         imgPreview.src = "https://picsum.photos/600/450";
         getHexCodeFromImage(imgPreview);
@@ -11,7 +87,7 @@ var colorPalette = document.querySelectorAll('.palette .color'),
     generateRandomly = function (){
         clearInterval(autoGeneration);
         generateRandomPaletteFromImg();//initial generate after generate randomly button click
-        autoGeneration = setInterval(function() {generateRandomPaletteFromImg();}, 3000);
+        autoGeneration = setInterval(() => generateRandomPaletteFromImg(), 3000);
     },
     addCopyAction = function(target){
         var input = document.createElement('input'),
@@ -51,58 +127,6 @@ var colorPalette = document.querySelectorAll('.palette .color'),
             });
             
         });
-    },
-    componentToHex= function(c) {
-        var hex = c.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-    },
-    rgbToHex =function (r, g, b) {
-        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-    },
-    isNumber = function (value) {
-        return typeof value === 'number' && isFinite(value);
-    },
-    isString = function (value) {
-        return typeof value === 'string' || value instanceof String;
-    },
-    getHexCode = function (colorCode){
-        var firstCode = colorCode[0],
-              hexCode = '';
-
-        if(isNumber(firstCode)){
-            hexCode = rgbToHex(colorCode[0], colorCode[1], colorCode[2]);
-        }else if (isString(firstCode)){
-            hexCode = '#' + colorCode;
-        }
-
-        return hexCode.toUpperCase();
-    },
-    changePaletteColor = function (generatedPallets){     
-        for (var i = 0; i < colorPalette.length; ++i) {
-            var palette = colorPalette[i],
-                  color = generatedPallets[i],
-                hexCode = getHexCode(color),
-              ntcObject = ntc.name(hexCode),
-              colorName = ntcObject[1];
-             //exactMatch = ntcObject[2];
-            
-            palette.style.setProperty('--color', hexCode);
-            colorCodes[i].innerHTML = hexCode;
-            colorNames[i].innerHTML = colorName;
-        }
-    },
-    getHexCodeFromImage = function(img){
-        const colorThief = new ColorThief();
-        var generatedPallets = [];
-        if (img.complete) {
-            generatedPallets = colorThief.getPalette(img, 4, 1);
-            changePaletteColor(generatedPallets);
-        } else {
-          img.addEventListener('load', function() {
-            generatedPallets = colorThief.getPalette(img, 4, 1);
-            changePaletteColor(generatedPallets);
-          });
-        }
     },
     uploadImgUrl = function(e){
         e.preventDefault()
