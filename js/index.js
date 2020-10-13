@@ -79,7 +79,7 @@ var colorPalette = document.querySelectorAll('.palette .color'),
         }
     },
     generateRandomPaletteFromImg = function() {
-        imgPreview.src = "https://picsum.photos/600/450";
+        imgPreview.src = "https://picsum.photos/600/450?"+performance.now();
         getHexCodeFromImage(imgPreview);
     },
     generateRandomly = function (){
