@@ -1,4 +1,3 @@
-
 var colorPalette = document.querySelectorAll('.palette .color'),
       colorNames = document.querySelectorAll('.code .name'),
       colorCodes = document.querySelectorAll('.code .number'),
@@ -75,7 +74,6 @@ var colorPalette = document.querySelectorAll('.palette .color'),
           img.addEventListener('load', function() {
             generatedPallets = colorThief.getPalette(img, 4, 1);
             changePaletteColor(generatedPallets);
-
             createLoadingIcon();
           });
         }
