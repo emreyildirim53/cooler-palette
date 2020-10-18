@@ -6,5 +6,5 @@ Are you struggling to find a color palette? What if the color palette you are lo
 
 
 
-Demo website: [emreyildirim.life](emreyildirim.life)
+Demo website: [emreyildirim.life](https://emreyildirim.life)
 
