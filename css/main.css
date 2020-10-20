@@ -466,5 +466,10 @@ input[type=file] {
     .copyright{
         margin-top: 16px;
     }
+
+    .github-corner svg{
+        width: 40px;
+        width: 40px;
+    }
 }
 
