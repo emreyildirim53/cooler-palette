@@ -383,6 +383,7 @@ input[type=file] {
     .wrapper{
         width: 100%;
         overflow-x: hidden;
+        row-gap:24px;
     }
 
     .header{
